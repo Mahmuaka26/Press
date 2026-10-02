@@ -1,0 +1,15 @@
+{
+  "name": "Kawnmawi Presbyterian Kohhran",
+  "short_name": "Kawnmawi",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "https://i.ibb.co/9VvYJbL/cross-icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
