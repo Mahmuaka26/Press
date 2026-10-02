@@ -201,6 +201,8 @@ document.getElementById('puipaPhotoInput').addEventListener('change',function(e)
 document.getElementById('box').innerText=chanchin;document.getElementById('ibox').innerText=inkh;checkAdmin();renderPuipa();renderThuSun();renderDrivePhotos();renderVideo();renderDocs();renderHriat();renderPalaiBials();renderThlenHosts();renderInbox();updateBar();goHome();
 </script>
 <script>(function(){var SECRET="Feb26";var cnt=0,last=0;var kawn=document.getElementById('kawnClick');if(kawn){kawn.addEventListener('click',function(){var now=Date.now();if(now-last>3000)cnt=0;last=now;cnt++;if(cnt>=5){cnt=0;checkAdmin();if(isAdmin){if(confirm('Logout duh em?')){sessionStorage.removeItem('kawn_isAdmin');isAdmin=false;updateBar();}return;}var p=prompt('Password:');if(p===SECRET){sessionStorage.setItem('kawn_isAdmin','true');checkAdmin();updateBar();alert('✅ Successfully Login');}}});}})();</script>
- </script>
+</script>
 <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js')}</script>
-<script>let deferredPrompt;const installBtn=document.getElementById('installBtn');window.addEventListener('beforeinstallprompt',(e)=>{e.preventDefault();deferredPrompt=e;installBtn.style.display='block';});installBtn.addEventListener('click',async()=>{if(deferredPrompt){deferredPrompt.prompt();const{outcome}=await deferredPrompt.userChoice;if(outcome==='accepted'){installBtn.style.display='none';}deferredPrompt=null;}});</script><button id="installBtn" style="display:none;position:fixed;bottom:20px;right:20px;background:#007bff;color:white;padding:12px 20px;border:none;border-radius:25px;font-size:18px;z-index:9999;box-shadow:0 4px 10px rgba(0,0,0,0.3)">📲 Install App</button>/body></html>
+<button id="installBtn" style="position:fixed;bottom:20px;right:20px;background:#007bff;color:white;padding:12px 20px;border:none;border-radius:25px;z-index:9999">📲 Install App</button>
+<script>let p=null;let b=document.getElementById('installBtn');window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();p=e});b.onclick=()=>{if(p){p.prompt()}else{alert('Dot 3 ⋮ > Add to Home screen')}};</script>
+</body></html>
