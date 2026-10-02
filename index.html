@@ -5,6 +5,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="apple-touch-icon" href="icon-192.png">
 <style>
+ body{font-size:21px!important;line-height:1.7!important}
+input,button,select{font-size:19px!important}
 *{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial,sans-serif;background:#eef2f7;padding-bottom:90px}
 .header{display:flex;height:72px;background:#0f172a;border-bottom:4px solid gold}.hL{width:65%;background:#87ceeb;display:flex;align-items:center;justify-content:center;font-size:32px}.hR{width:35%;color:white;text-align:center;font-size:9px;display:flex;flex-direction:column;justify-content:center;cursor:pointer}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px}.card{background:white;border:2.5px solid black;border-radius:18px;min-height:130px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer}.icon{font-size:36px;margin-bottom:6px}
@@ -201,4 +203,4 @@ document.getElementById('box').innerText=chanchin;document.getElementById('ibox'
 <script>(function(){var SECRET="Feb26";var cnt=0,last=0;var kawn=document.getElementById('kawnClick');if(kawn){kawn.addEventListener('click',function(){var now=Date.now();if(now-last>3000)cnt=0;last=now;cnt++;if(cnt>=5){cnt=0;checkAdmin();if(isAdmin){if(confirm('Logout duh em?')){sessionStorage.removeItem('kawn_isAdmin');isAdmin=false;updateBar();}return;}var p=prompt('Password:');if(p===SECRET){sessionStorage.setItem('kawn_isAdmin','true');checkAdmin();updateBar();alert('✅ Successfully Login');}}});}})();</script>
  </script>
 <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js')}</script>
-</body></html>
+<script>let deferredPrompt;const installBtn=document.getElementById('installBtn');window.addEventListener('beforeinstallprompt',(e)=>{e.preventDefault();deferredPrompt=e;installBtn.style.display='block';});installBtn.addEventListener('click',async()=>{if(deferredPrompt){deferredPrompt.prompt();const{outcome}=await deferredPrompt.userChoice;if(outcome==='accepted'){installBtn.style.display='none';}deferredPrompt=null;}});</script><button id="installBtn" style="display:none;position:fixed;bottom:20px;right:20px;background:#007bff;color:white;padding:12px 20px;border:none;border-radius:25px;font-size:18px;z-index:9999;box-shadow:0 4px 10px rgba(0,0,0,0.3)">📲 Install App</button>/body></html>
