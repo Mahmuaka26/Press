@@ -235,43 +235,19 @@ window.addEventListener('appinstalled', () => {
 if(window.matchMedia('(display-mode: standalone)').matches){
   if(box) box.style.display = 'none';
 }
-</script><!-- 🔥 FIREBASE LIVE - ENGMAH TI DANGLAM LO -->
+</script>
+<!-- 🔥 FIREBASE LIVE - FINAL FIX - 100% THAWK TUR -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, doc, setDoc, getDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-const firebaseConfig = {
-  apiKey: "AIzaSyAKSD9vlt7EIIoBp_EWdIE-VrhXZvDJoc0",
-  authDomain: "kawnmawi-kohhran.firebaseapp.com",
-  projectId: "kawnmawi-kohhran",
-  storageBucket: "kawnmawi-kohhran.firebasestorage.app",
-  messagingSenderId: "706150877103",
-  appId: "1:706150877103:web:88f3af3e32eb042657115a"
-};
+import { getFirestore, doc, setDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+const firebaseConfig = { apiKey: "AIzaSyAKSD9vlt7EIIoBp_EWdIE-VrhXZvDJoc0", authDomain: "kawnmawi-kohhran.firebaseapp.com", projectId: "kawnmawi-kohhran", storageBucket: "kawnmawi-kohhran.firebasestorage.app", messagingSenderId: "706150877103", appId: "1:706150877103:web:88f3af3e32eb042657115a" };
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-function safeSet(id, val){ try{ let e=document.getElementById(id); if(e) e.innerText=val; }catch(e){} }
-const _origSaveLocal = window.saveLocalOnly;
-window.saveLocalOnly = function(){
-  try{ if(_origSaveLocal) _origSaveLocal(); }catch(e){}
-  try{
-    if(typeof chanchin!=='undefined') setDoc(doc(db,"kohhran","chanchin"),{text:chanchin, updatedAt:serverTimestamp()},{merge:true});
-    if(typeof inkh!=='undefined') setDoc(doc(db,"kohhran","inkhawmpui"),{text:inkh, updatedAt:serverTimestamp()},{merge:true});
-    if(typeof puipate!=='undefined') setDoc(doc(db,"kohhran","puipate"),{data:JSON.stringify(puipate), updatedAt:serverTimestamp()},{merge:true});
-    if(typeof videos!=='undefined') setDoc(doc(db,"kohhran","videos"),{data:JSON.stringify(videos), updatedAt:serverTimestamp()},{merge:true});
-    if(typeof drivePhotos!=='undefined') setDoc(doc(db,"kohhran","drivePhotos"),{data:JSON.stringify(drivePhotos), updatedAt:serverTimestamp()},{merge:true});
-    if(typeof docs!=='undefined') setDoc(doc(db,"kohhran","docs"),{data:JSON.stringify(docs), updatedAt:serverTimestamp()},{merge:true});
-    if(typeof palaiData!=='undefined') setDoc(doc(db,"kohhran","palaiData"),{data:JSON.stringify(palaiData), updatedAt:serverTimestamp()},{merge:true});
-    if(typeof thlenHosts!=='undefined') setDoc(doc(db,"kohhran","thlenHosts"),{data:JSON.stringify(thlenHosts), updatedAt:serverTimestamp()},{merge:true});
-    if(typeof hriatList!=='undefined') setDoc(doc(db,"kohhran","hriatList"),{data:JSON.stringify(hriatList), updatedAt:serverTimestamp()},{merge:true});
-    if(typeof deptList!=='undefined') setDoc(doc(db,"kohhran","deptList"),{data:JSON.stringify(deptList), updatedAt:serverTimestamp()},{merge:true});
-    if(typeof deptLeaders!=='undefined') setDoc(doc(db,"kohhran","deptLeaders"),{data:JSON.stringify(deptLeaders), updatedAt:serverTimestamp()},{merge:true});
-  }catch(e){}
-};
-onSnapshot(doc(db,"kohhran","chanchin"), s=>{ if(s.exists()&&s.data().text){ localStorage.setItem('kawn_chanchin',s.data().text); chanchin=s.data().text; safeSet('box',s.data().text);} });
-onSnapshot(doc(db,"kohhran","inkhawmpui"), s=>{ if(s.exists()&&s.data().text){ localStorage.setItem('kawn_inkh',s.data().text); inkh=s.data().text; safeSet('ibox',s.data().text);} });
-onSnapshot(doc(db,"kohhran","puipate"), s=>{ if(s.exists()&&s.data().data){ try{ let a=JSON.parse(s.data().data); localStorage.setItem('kawn_puipa8_full',JSON.stringify(a)); puipate=a; renderPuipa(); }catch(e){}} });
-onSnapshot(doc(db,"kohhran","videos"), s=>{ if(s.exists()&&s.data().data){ try{ let a=JSON.parse(s.data().data); localStorage.setItem('kawn_videos',JSON.stringify(a)); videos=a; renderVideo(); }catch(e){}} });
-onSnapshot(doc(db,"kohhran","drivePhotos"), s=>{ if(s.exists()&&s.data().data){ try{ let a=JSON.parse(s.data().data); localStorage.setItem('kawn_drive_photos',JSON.stringify(a)); drivePhotos=a; renderDrivePhotos(); }catch(e){}} });
-onSnapshot(doc(db,"kohhran","docs"), s=>{ if(s.exists()&&s.data().data){ try{ let a=JSON.parse(s.data().data); localStorage.setItem('kawn_docs_link',JSON.stringify(a)); docs=a; renderDocs(); }catch(e){}} });
-onSnapshot(doc(db,"kohhran","palaiData"), s=>{ if(s.exists()&&s.data().data){ try{ let a=JSON.parse(s.data().data); localStorage.setItem('kawn_palai',JSON.stringify(a)); palaiData=a; renderPalaiBials(); }catch(e){}} });
-</script></body></html>
+const _oldSaveAll = window.saveAll;
+window.saveAll = async function(){ try{ if(_oldSaveAll) _oldSaveAll(); }catch(e){} try{ const g=(k)=>{ try{return localStorage.getItem(k);}catch(e){return null;} }; let v; v=g('kawn_chanchin'); if(v) await setDoc(doc(db,"kohhran","chanchin"),{text:v, updatedAt:serverTimestamp()},{merge:true}); v=g('kawn_inkh'); if(v) await setDoc(doc(db,"kohhran","inkhawmpui"),{text:v, updatedAt:serverTimestamp()},{merge:true}); v=g('kawn_puipa8_full'); if(v) await setDoc(doc(db,"kohhran","puipate"),{data:v, updatedAt:serverTimestamp()},{merge:true}); v=g('kawn_videos'); if(v) await setDoc(doc(db,"kohhran","videos"),{data:v, updatedAt:serverTimestamp()},{merge:true}); v=g('kawn_drive_photos'); if(v) await setDoc(doc(db,"kohhran","drivePhotos"),{data:v, updatedAt:serverTimestamp()},{merge:true}); v=g('kawn_docs_link'); if(v) await setDoc(doc(db,"kohhran","docs"),{data:v, updatedAt:serverTimestamp()},{merge:true}); v=g('kawn_palai'); if(v) await setDoc(doc(db,"kohhran","palaiData"),{data:v, updatedAt:serverTimestamp()},{merge:true}); v=g('kawn_thlen_host'); if(v) await setDoc(doc(db,"kohhran","thlenHosts"),{data:v, updatedAt:serverTimestamp()},{merge:true}); v=g('kawn_hriat'); if(v) await setDoc(doc(db,"kohhran","hriatList"),{data:v, updatedAt:serverTimestamp()},{merge:true}); v=g('kawn_dept'); if(v) await setDoc(doc(db,"kohhran","deptList"),{data:v, updatedAt:serverTimestamp()},{merge:true}); v=g('kawn_dept_lead'); if(v) await setDoc(doc(db,"kohhran","deptLeaders"),{data:v, updatedAt:serverTimestamp()},{merge:true}); console.log("🔥 Firebase DONE"); }catch(e){ console.error(e); } };
+function listen(col,key,cb){ onSnapshot(doc(db,"kohhran",col), s=>{ if(s.exists()&&s.data()){ let d=s.data(); let val=d.text||d.data; if(!val) return; try{ if(d.text){ if(col==="chanchin") localStorage.setItem('kawn_chanchin',val); if(col==="inkhawmpui") localStorage.setItem('kawn_inkh',val); }else{ const map={puipate:'kawn_puipa8_full',videos:'kawn_videos',drivePhotos:'kawn_drive_photos',docs:'kawn_docs_link',palaiData:'kawn_palai',thlenHosts:'kawn_thlen_host',hriatList:'kawn_hriat',deptList:'kawn_dept',deptLeaders:'kawn_dept_lead'}; if(map[col]) localStorage.setItem(map[col],val); } if(cb) cb(val); try{ if(col==="chanchin"){ let e=document.getElementById('box'); if(e) e.innerText=val; } if(col==="inkhawmpui"){ let e=document.getElementById('ibox'); if(e) e.innerText=val; } }catch(e){} }catch(e){} } }); }
+listen("chanchin","kawn_chanchin"); listen("inkhawmpui","kawn_inkh"); listen("puipate","kawn_puipa8_full",()=>{ try{ if(window.renderPuipa) window.renderPuipa(); }catch(e){} }); listen("videos","kawn_videos",()=>{ try{ if(window.renderVideo) window.renderVideo(); }catch(e){} }); listen("drivePhotos","kawn_drive_photos",()=>{ try{ if(window.renderDrivePhotos) window.renderDrivePhotos(); }catch(e){} }); listen("docs","kawn_docs_link",()=>{ try{ if(window.renderDocs) window.renderDocs(); }catch(e){} }); listen("palaiData","kawn_palai",()=>{ try{ if(window.renderPalaiBials) window.renderPalaiBials(); }catch(e){} });
+console.log("🔥 LIVE READY");
+</script>
+</body>
+</html>
