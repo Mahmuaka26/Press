@@ -236,6 +236,7 @@ if(window.matchMedia('(display-mode: standalone)').matches){
   if(box) box.style.display = 'none';
 }
 </script>
+</script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, doc, setDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -243,67 +244,48 @@ const firebaseConfig = { apiKey: "AIzaSyAKSD9vlt7EIIoBp_EWdIE-VrhXZvDJoc0", auth
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-async function doUpload(){
+async function uploadAll(){
+  const g=k=>localStorage.getItem(k);
   try{
-    const g=(k)=>{ try{return localStorage.getItem(k);}catch(e){return null;} };
     let v=g('kawn_chanchin'); if(v) await setDoc(doc(db,"kohhran","chanchin"),{text:v, updatedAt:serverTimestamp()},{merge:true});
     v=g('kawn_inkh'); if(v) await setDoc(doc(db,"kohhran","inkhawmpui"),{text:v, updatedAt:serverTimestamp()},{merge:true});
+    v=g('kawn_hriat'); if(v) await setDoc(doc(db,"kohhran","hriatList"),{data:v, updatedAt:serverTimestamp()},{merge:true});
     v=g('kawn_puipa8_full'); if(v) await setDoc(doc(db,"kohhran","puipate"),{data:v, updatedAt:serverTimestamp()},{merge:true});
     v=g('kawn_videos'); if(v) await setDoc(doc(db,"kohhran","videos"),{data:v, updatedAt:serverTimestamp()},{merge:true});
     v=g('kawn_drive_photos'); if(v) await setDoc(doc(db,"kohhran","drivePhotos"),{data:v, updatedAt:serverTimestamp()},{merge:true});
     v=g('kawn_docs_link'); if(v) await setDoc(doc(db,"kohhran","docs"),{data:v, updatedAt:serverTimestamp()},{merge:true});
     v=g('kawn_palai'); if(v) await setDoc(doc(db,"kohhran","palaiData"),{data:v, updatedAt:serverTimestamp()},{merge:true});
     v=g('kawn_thlen_host'); if(v) await setDoc(doc(db,"kohhran","thlenHosts"),{data:v, updatedAt:serverTimestamp()},{merge:true});
-    v=g('kawn_hriat'); if(v) await setDoc(doc(db,"kohhran","hriatList"),{data:v, updatedAt:serverTimestamp()},{merge:true});
     v=g('kawn_dept'); if(v) await setDoc(doc(db,"kohhran","deptList"),{data:v, updatedAt:serverTimestamp()},{merge:true});
     v=g('kawn_dept_lead'); if(v) await setDoc(doc(db,"kohhran","deptLeaders"),{data:v, updatedAt:serverTimestamp()},{merge:true});
-    console.log("✅ Firebase DONE");
-  }catch(e){ alert("Firebase Error: "+e.message); }
+  }catch(e){ alert("Error: "+e.message); }
 }
 
-// SAVE APIANGIN FIREBASE AH A KAL ANG
-window.saveAll = async function(){
-  try{let a=document.getElementById('chanchinInput'); if(a) localStorage.setItem('kawn_chanchin',a.value); let b=document.getElementById('inkhInput'); if(b) localStorage.setItem('kawn_inkh',b.value);}catch(e){}
-  await doUpload(); alert("✅ LIVE ta!");
-};
-
-// TUNAH A PAWIMAWH BER - i Save button te zawng zawng hook
-function hook(name){
-  if(window[name]){
-    let orig = window[name];
-    window[name] = async function(){
-      let r = orig.apply(this, arguments);
-      setTimeout(async()=>{ await doUpload(); console.log(name+" -> Firebase"); }, 800);
-      return r;
-    };
+// Eng Save button pawh hmeh se Firebase ah a kal ang
+function hook(fn){
+  if(window[fn]){
+    let oldFn=window[fn];
+    window[fn]=async function(){ let r=oldFn.apply(this,arguments); await uploadAll(); alert("✅ LIVE ta! Phone dang ah en rawh"); return r; };
   }
 }
-// Hming zawng zawng
-["sEditHria","sEditChanchin","sEditInkh","sEditPuipa","sEditVideo","sEditDrive","sEditDocs","sEditPalai","sEditThlen","sEditDept","saveChanchin","saveHriat"].forEach(hook);
+setTimeout(()=>{ ["sEditHria","sEditChanchin","sEditInkh","sEditPuipa","sEditDept","saveAll","sEditPalai","sEditThlen","sEditVideo","sEditDocs","sEditDrive"].forEach(hook); },1000);
 
-// tin, localStorage a in thlak apiangin auto upload
-const _set = localStorage.setItem;
-localStorage.setItem = function(k,v){ _set.call(this,k,v); if(k && k.startsWith('kawn_')){ setTimeout(doUpload,1000); } };
-
-function listen(col){
-  onSnapshot(doc(db,"kohhran",col), s=>{
+// LIVE lo lut tur
+function listen(c,k){
+  onSnapshot(doc(db,"kohhran",c),s=>{
     if(s.exists()){
       let d=s.data(); let val=d.text||d.data; if(!val) return;
-      try{
-        if(d.text){
-          if(col==="chanchin"){ localStorage.setItem('kawn_chanchin',val); let e=document.getElementById('box'); if(e) e.innerText=val; let e2=document.getElementById('chanchinBox'); if(e2) e2.innerText=val; }
-          if(col==="inkhawmpui"){ localStorage.setItem('kawn_inkh',val); }
-        }else{
-          const map={puipate:'kawn_puipa8_full',videos:'kawn_videos',drivePhotos:'kawn_drive_photos',docs:'kawn_docs_link',palaiData:'kawn_palai',thlenHosts:'kawn_thlen_host',hriatList:'kawn_hriat',deptList:'kawn_dept',deptLeaders:'kawn_dept_lead'};
-          if(map[col]){ localStorage.setItem(map[col],val); }
-        }
-      }catch(e){}
+      if(c==="chanchin"){ localStorage.setItem('kawn_chanchin',val); }
+      if(c==="inkhawmpui"){ localStorage.setItem('kawn_inkh',val); }
+      if(k) localStorage.setItem(k,val);
+      // auto reload chuan a thar a lo lang nghal ang
+      let cur=localStorage.getItem(k||'kawn_chanchin');
+      if(cur!==val){ location.reload(); }
     }
   });
 }
-["chanchin","inkhawmpui","puipate","videos","drivePhotos","docs","palaiData","thlenHosts","hriatList","deptList","deptLeaders"].forEach(listen);
-console.log("🔥 LIVE READY v2");
+listen("chanchin"); listen("inkhawmpui"); listen("hriatList","kawn_hriat"); listen("puipate","kawn_puipa8_full"); listen("videos","kawn_videos");
+console.log("LIVE v3 ready");
 </script>
 </body>
 </html>
- 
