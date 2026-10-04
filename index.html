@@ -1,7 +1,8 @@
 <!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Kawnmawi - Final Fix Delete</title>
- <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, onSnapshot, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
 const firebaseConfig = {
   apiKey: "AIzaSyCGI0WocHzvXBh3sYLk69cCyy84LDVsMMw",
   authDomain: "kawnmawi-live-2026.firebaseapp.com",
@@ -10,9 +11,15 @@ const firebaseConfig = {
   messagingSenderId: "986220095590",
   appId: "1:986220095590:web:829b925d1c5d47fe74e5a7"
 };
+
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 window.db = db;
+window.doc = doc;
+window.setDoc = setDoc;
+window.serverTimestamp = serverTimestamp;
+window.collection = collection;
+window.onSnapshot = onSnapshot;
 console.log("Firebase LIVE - kawnmawi-live-2026");
 </script>
 <link rel="manifest" href="manifest.json">
