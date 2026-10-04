@@ -258,9 +258,12 @@ window.addEventListener('appinstalled', () => {
 if(window.matchMedia('(display-mode: standalone)').matches){
   if(box) box.style.display = 'none';
 }
-</script><script type="module">
-import { doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+</script>
+<script>
 const db = window.db;
+const doc = window.doc;
+const setDoc = window.setDoc;
+const serverTimestamp = window.serverTimestamp;
 async function uploadAll(){
   const g=k=>localStorage.getItem(k);
   try{
