@@ -235,4 +235,43 @@ window.addEventListener('appinstalled', () => {
 if(window.matchMedia('(display-mode: standalone)').matches){
   if(box) box.style.display = 'none';
 }
+</script><!-- 🔥 FIREBASE LIVE - ENGMAH TI DANGLAM LO -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, setDoc, getDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+const firebaseConfig = {
+  apiKey: "AIzaSyAKSD9vlt7EIIoBp_EWdIE-VrhXZvDJoc0",
+  authDomain: "kawnmawi-kohhran.firebaseapp.com",
+  projectId: "kawnmawi-kohhran",
+  storageBucket: "kawnmawi-kohhran.firebasestorage.app",
+  messagingSenderId: "706150877103",
+  appId: "1:706150877103:web:88f3af3e32eb042657115a"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+function safeSet(id, val){ try{ let e=document.getElementById(id); if(e) e.innerText=val; }catch(e){} }
+const _origSaveLocal = window.saveLocalOnly;
+window.saveLocalOnly = function(){
+  try{ if(_origSaveLocal) _origSaveLocal(); }catch(e){}
+  try{
+    if(typeof chanchin!=='undefined') setDoc(doc(db,"kohhran","chanchin"),{text:chanchin, updatedAt:serverTimestamp()},{merge:true});
+    if(typeof inkh!=='undefined') setDoc(doc(db,"kohhran","inkhawmpui"),{text:inkh, updatedAt:serverTimestamp()},{merge:true});
+    if(typeof puipate!=='undefined') setDoc(doc(db,"kohhran","puipate"),{data:JSON.stringify(puipate), updatedAt:serverTimestamp()},{merge:true});
+    if(typeof videos!=='undefined') setDoc(doc(db,"kohhran","videos"),{data:JSON.stringify(videos), updatedAt:serverTimestamp()},{merge:true});
+    if(typeof drivePhotos!=='undefined') setDoc(doc(db,"kohhran","drivePhotos"),{data:JSON.stringify(drivePhotos), updatedAt:serverTimestamp()},{merge:true});
+    if(typeof docs!=='undefined') setDoc(doc(db,"kohhran","docs"),{data:JSON.stringify(docs), updatedAt:serverTimestamp()},{merge:true});
+    if(typeof palaiData!=='undefined') setDoc(doc(db,"kohhran","palaiData"),{data:JSON.stringify(palaiData), updatedAt:serverTimestamp()},{merge:true});
+    if(typeof thlenHosts!=='undefined') setDoc(doc(db,"kohhran","thlenHosts"),{data:JSON.stringify(thlenHosts), updatedAt:serverTimestamp()},{merge:true});
+    if(typeof hriatList!=='undefined') setDoc(doc(db,"kohhran","hriatList"),{data:JSON.stringify(hriatList), updatedAt:serverTimestamp()},{merge:true});
+    if(typeof deptList!=='undefined') setDoc(doc(db,"kohhran","deptList"),{data:JSON.stringify(deptList), updatedAt:serverTimestamp()},{merge:true});
+    if(typeof deptLeaders!=='undefined') setDoc(doc(db,"kohhran","deptLeaders"),{data:JSON.stringify(deptLeaders), updatedAt:serverTimestamp()},{merge:true});
+  }catch(e){}
+};
+onSnapshot(doc(db,"kohhran","chanchin"), s=>{ if(s.exists()&&s.data().text){ localStorage.setItem('kawn_chanchin',s.data().text); chanchin=s.data().text; safeSet('box',s.data().text);} });
+onSnapshot(doc(db,"kohhran","inkhawmpui"), s=>{ if(s.exists()&&s.data().text){ localStorage.setItem('kawn_inkh',s.data().text); inkh=s.data().text; safeSet('ibox',s.data().text);} });
+onSnapshot(doc(db,"kohhran","puipate"), s=>{ if(s.exists()&&s.data().data){ try{ let a=JSON.parse(s.data().data); localStorage.setItem('kawn_puipa8_full',JSON.stringify(a)); puipate=a; renderPuipa(); }catch(e){}} });
+onSnapshot(doc(db,"kohhran","videos"), s=>{ if(s.exists()&&s.data().data){ try{ let a=JSON.parse(s.data().data); localStorage.setItem('kawn_videos',JSON.stringify(a)); videos=a; renderVideo(); }catch(e){}} });
+onSnapshot(doc(db,"kohhran","drivePhotos"), s=>{ if(s.exists()&&s.data().data){ try{ let a=JSON.parse(s.data().data); localStorage.setItem('kawn_drive_photos',JSON.stringify(a)); drivePhotos=a; renderDrivePhotos(); }catch(e){}} });
+onSnapshot(doc(db,"kohhran","docs"), s=>{ if(s.exists()&&s.data().data){ try{ let a=JSON.parse(s.data().data); localStorage.setItem('kawn_docs_link',JSON.stringify(a)); docs=a; renderDocs(); }catch(e){}} });
+onSnapshot(doc(db,"kohhran","palaiData"), s=>{ if(s.exists()&&s.data().data){ try{ let a=JSON.parse(s.data().data); localStorage.setItem('kawn_palai',JSON.stringify(a)); palaiData=a; renderPalaiBials(); }catch(e){}} });
 </script></body></html>
