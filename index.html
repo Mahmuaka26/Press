@@ -236,17 +236,53 @@ if(window.matchMedia('(display-mode: standalone)').matches){
   if(box) box.style.display = 'none';
 }
 </script>
-<!-- 🔥 FIREBASE LIVE - FINAL FIX - 100% THAWK TUR -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, doc, setDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 const firebaseConfig = { apiKey: "AIzaSyAKSD9vlt7EIIoBp_EWdIE-VrhXZvDJoc0", authDomain: "kawnmawi-kohhran.firebaseapp.com", projectId: "kawnmawi-kohhran", storageBucket: "kawnmawi-kohhran.firebasestorage.app", messagingSenderId: "706150877103", appId: "1:706150877103:web:88f3af3e32eb042657115a" };
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const _oldSaveAll = window.saveAll;
-window.saveAll = async function(){ try{ if(_oldSaveAll) _oldSaveAll(); }catch(e){} try{ const g=(k)=>{ try{return localStorage.getItem(k);}catch(e){return null;} }; let v; v=g('kawn_chanchin'); if(v) await setDoc(doc(db,"kohhran","chanchin"),{text:v, updatedAt:serverTimestamp()},{merge:true}); v=g('kawn_inkh'); if(v) await setDoc(doc(db,"kohhran","inkhawmpui"),{text:v, updatedAt:serverTimestamp()},{merge:true}); v=g('kawn_puipa8_full'); if(v) await setDoc(doc(db,"kohhran","puipate"),{data:v, updatedAt:serverTimestamp()},{merge:true}); v=g('kawn_videos'); if(v) await setDoc(doc(db,"kohhran","videos"),{data:v, updatedAt:serverTimestamp()},{merge:true}); v=g('kawn_drive_photos'); if(v) await setDoc(doc(db,"kohhran","drivePhotos"),{data:v, updatedAt:serverTimestamp()},{merge:true}); v=g('kawn_docs_link'); if(v) await setDoc(doc(db,"kohhran","docs"),{data:v, updatedAt:serverTimestamp()},{merge:true}); v=g('kawn_palai'); if(v) await setDoc(doc(db,"kohhran","palaiData"),{data:v, updatedAt:serverTimestamp()},{merge:true}); v=g('kawn_thlen_host'); if(v) await setDoc(doc(db,"kohhran","thlenHosts"),{data:v, updatedAt:serverTimestamp()},{merge:true}); v=g('kawn_hriat'); if(v) await setDoc(doc(db,"kohhran","hriatList"),{data:v, updatedAt:serverTimestamp()},{merge:true}); v=g('kawn_dept'); if(v) await setDoc(doc(db,"kohhran","deptList"),{data:v, updatedAt:serverTimestamp()},{merge:true}); v=g('kawn_dept_lead'); if(v) await setDoc(doc(db,"kohhran","deptLeaders"),{data:v, updatedAt:serverTimestamp()},{merge:true}); console.log("🔥 Firebase DONE"); }catch(e){ console.error(e); } };
-function listen(col,key,cb){ onSnapshot(doc(db,"kohhran",col), s=>{ if(s.exists()&&s.data()){ let d=s.data(); let val=d.text||d.data; if(!val) return; try{ if(d.text){ if(col==="chanchin") localStorage.setItem('kawn_chanchin',val); if(col==="inkhawmpui") localStorage.setItem('kawn_inkh',val); }else{ const map={puipate:'kawn_puipa8_full',videos:'kawn_videos',drivePhotos:'kawn_drive_photos',docs:'kawn_docs_link',palaiData:'kawn_palai',thlenHosts:'kawn_thlen_host',hriatList:'kawn_hriat',deptList:'kawn_dept',deptLeaders:'kawn_dept_lead'}; if(map[col]) localStorage.setItem(map[col],val); } if(cb) cb(val); try{ if(col==="chanchin"){ let e=document.getElementById('box'); if(e) e.innerText=val; } if(col==="inkhawmpui"){ let e=document.getElementById('ibox'); if(e) e.innerText=val; } }catch(e){} }catch(e){} } }); }
-listen("chanchin","kawn_chanchin"); listen("inkhawmpui","kawn_inkh"); listen("puipate","kawn_puipa8_full",()=>{ try{ if(window.renderPuipa) window.renderPuipa(); }catch(e){} }); listen("videos","kawn_videos",()=>{ try{ if(window.renderVideo) window.renderVideo(); }catch(e){} }); listen("drivePhotos","kawn_drive_photos",()=>{ try{ if(window.renderDrivePhotos) window.renderDrivePhotos(); }catch(e){} }); listen("docs","kawn_docs_link",()=>{ try{ if(window.renderDocs) window.renderDocs(); }catch(e){} }); listen("palaiData","kawn_palai",()=>{ try{ if(window.renderPalaiBials) window.renderPalaiBials(); }catch(e){} });
+
+window.saveAll = async function(){
+  try{
+    // hlui save
+    let a=document.getElementById('chanchinInput'); if(a) localStorage.setItem('kawn_chanchin',a.value);
+    let b=document.getElementById('inkhawmInput'); if(b) localStorage.setItem('kawn_inkh',b.value);
+  }catch(e){}
+  try{
+    const g=(k)=>{ try{return localStorage.getItem(k);}catch(e){return null;} };
+    let v=g('kawn_chanchin'); if(v) await setDoc(doc(db,"kohhran","chanchin"),{text:v, updatedAt:serverTimestamp()},{merge:true});
+    v=g('kawn_inkh'); if(v) await setDoc(doc(db,"kohhran","inkhawmpui"),{text:v, updatedAt:serverTimestamp()},{merge:true});
+    v=g('kawn_puipa8_full'); if(v) await setDoc(doc(db,"kohhran","puipate"),{data:v, updatedAt:serverTimestamp()},{merge:true});
+    v=g('kawn_videos'); if(v) await setDoc(doc(db,"kohhran","videos"),{data:v, updatedAt:serverTimestamp()},{merge:true});
+    v=g('kawn_drive_photos'); if(v) await setDoc(doc(db,"kohhran","drivePhotos"),{data:v, updatedAt:serverTimestamp()},{merge:true});
+    v=g('kawn_docs_link'); if(v) await setDoc(doc(db,"kohhran","docs"),{data:v, updatedAt:serverTimestamp()},{merge:true});
+    v=g('kawn_palai'); if(v) await setDoc(doc(db,"kohhran","palaiData"),{data:v, updatedAt:serverTimestamp()},{merge:true});
+    v=g('kawn_thlen_host'); if(v) await setDoc(doc(db,"kohhran","thlenHosts"),{data:v, updatedAt:serverTimestamp()},{merge:true});
+    v=g('kawn_hriat'); if(v) await setDoc(doc(db,"kohhran","hriatList"),{data:v, updatedAt:serverTimestamp()},{merge:true});
+    v=g('kawn_dept'); if(v) await setDoc(doc(db,"kohhran","deptList"),{data:v, updatedAt:serverTimestamp()},{merge:true});
+    v=g('kawn_dept_lead'); if(v) await setDoc(doc(db,"kohhran","deptLeaders"),{data:v, updatedAt:serverTimestamp()},{merge:true});
+    alert("✅ Firebase ah a lut ta! LIVE a ni tawh!");
+  }catch(e){ alert("❌ Firebase Error: "+e.message); }
+};
+
+function listen(col){
+  onSnapshot(doc(db,"kohhran",col), s=>{
+    if(s.exists()){
+      let d=s.data(); let val=d.text||d.data; if(!val) return;
+      try{
+        if(d.text){
+          if(col==="chanchin"){ localStorage.setItem('kawn_chanchin',val); let e=document.getElementById('box'); if(e) e.innerText=val; }
+          if(col==="inkhawmpui"){ localStorage.setItem('kawn_inkh',val); }
+        }else{
+          const map={puipate:'kawn_puipa8_full',videos:'kawn_videos',drivePhotos:'kawn_drive_photos',docs:'kawn_docs_link',palaiData:'kawn_palai',thlenHosts:'kawn_thlen_host',hriatList:'kawn_hriat',deptList:'kawn_dept',deptLeaders:'kawn_dept_lead'};
+          if(map[col]) localStorage.setItem(map[col],val);
+        }
+      }catch(e){}
+    }
+  });
+}
+listen("chanchin"); listen("inkhawmpui"); listen("puipate"); listen("videos"); listen("drivePhotos"); listen("docs"); listen("palaiData"); listen("thlenHosts"); listen("hriatList"); listen("deptList"); listen("deptLeaders");
 console.log("🔥 LIVE READY");
 </script>
 </body>
