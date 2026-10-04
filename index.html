@@ -243,12 +243,7 @@ const firebaseConfig = { apiKey: "AIzaSyAKSD9vlt7EIIoBp_EWdIE-VrhXZvDJoc0", auth
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-window.saveAll = async function(){
-  try{
-    // hlui save
-    let a=document.getElementById('chanchinInput'); if(a) localStorage.setItem('kawn_chanchin',a.value);
-    let b=document.getElementById('inkhawmInput'); if(b) localStorage.setItem('kawn_inkh',b.value);
-  }catch(e){}
+async function doUpload(){
   try{
     const g=(k)=>{ try{return localStorage.getItem(k);}catch(e){return null;} };
     let v=g('kawn_chanchin'); if(v) await setDoc(doc(db,"kohhran","chanchin"),{text:v, updatedAt:serverTimestamp()},{merge:true});
@@ -262,9 +257,33 @@ window.saveAll = async function(){
     v=g('kawn_hriat'); if(v) await setDoc(doc(db,"kohhran","hriatList"),{data:v, updatedAt:serverTimestamp()},{merge:true});
     v=g('kawn_dept'); if(v) await setDoc(doc(db,"kohhran","deptList"),{data:v, updatedAt:serverTimestamp()},{merge:true});
     v=g('kawn_dept_lead'); if(v) await setDoc(doc(db,"kohhran","deptLeaders"),{data:v, updatedAt:serverTimestamp()},{merge:true});
-    alert("✅ Firebase ah a lut ta! LIVE a ni tawh!");
-  }catch(e){ alert("❌ Firebase Error: "+e.message); }
+    console.log("✅ Firebase DONE");
+  }catch(e){ alert("Firebase Error: "+e.message); }
+}
+
+// SAVE APIANGIN FIREBASE AH A KAL ANG
+window.saveAll = async function(){
+  try{let a=document.getElementById('chanchinInput'); if(a) localStorage.setItem('kawn_chanchin',a.value); let b=document.getElementById('inkhInput'); if(b) localStorage.setItem('kawn_inkh',b.value);}catch(e){}
+  await doUpload(); alert("✅ LIVE ta!");
 };
+
+// TUNAH A PAWIMAWH BER - i Save button te zawng zawng hook
+function hook(name){
+  if(window[name]){
+    let orig = window[name];
+    window[name] = async function(){
+      let r = orig.apply(this, arguments);
+      setTimeout(async()=>{ await doUpload(); console.log(name+" -> Firebase"); }, 800);
+      return r;
+    };
+  }
+}
+// Hming zawng zawng
+["sEditHria","sEditChanchin","sEditInkh","sEditPuipa","sEditVideo","sEditDrive","sEditDocs","sEditPalai","sEditThlen","sEditDept","saveChanchin","saveHriat"].forEach(hook);
+
+// tin, localStorage a in thlak apiangin auto upload
+const _set = localStorage.setItem;
+localStorage.setItem = function(k,v){ _set.call(this,k,v); if(k && k.startsWith('kawn_')){ setTimeout(doUpload,1000); } };
 
 function listen(col){
   onSnapshot(doc(db,"kohhran",col), s=>{
@@ -272,18 +291,19 @@ function listen(col){
       let d=s.data(); let val=d.text||d.data; if(!val) return;
       try{
         if(d.text){
-          if(col==="chanchin"){ localStorage.setItem('kawn_chanchin',val); let e=document.getElementById('box'); if(e) e.innerText=val; }
+          if(col==="chanchin"){ localStorage.setItem('kawn_chanchin',val); let e=document.getElementById('box'); if(e) e.innerText=val; let e2=document.getElementById('chanchinBox'); if(e2) e2.innerText=val; }
           if(col==="inkhawmpui"){ localStorage.setItem('kawn_inkh',val); }
         }else{
           const map={puipate:'kawn_puipa8_full',videos:'kawn_videos',drivePhotos:'kawn_drive_photos',docs:'kawn_docs_link',palaiData:'kawn_palai',thlenHosts:'kawn_thlen_host',hriatList:'kawn_hriat',deptList:'kawn_dept',deptLeaders:'kawn_dept_lead'};
-          if(map[col]) localStorage.setItem(map[col],val);
+          if(map[col]){ localStorage.setItem(map[col],val); }
         }
       }catch(e){}
     }
   });
 }
-listen("chanchin"); listen("inkhawmpui"); listen("puipate"); listen("videos"); listen("drivePhotos"); listen("docs"); listen("palaiData"); listen("thlenHosts"); listen("hriatList"); listen("deptList"); listen("deptLeaders");
-console.log("🔥 LIVE READY");
+["chanchin","inkhawmpui","puipate","videos","drivePhotos","docs","palaiData","thlenHosts","hriatList","deptList","deptLeaders"].forEach(listen);
+console.log("🔥 LIVE READY v2");
 </script>
 </body>
 </html>
+ 
