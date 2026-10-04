@@ -260,46 +260,96 @@ if(window.matchMedia('(display-mode: standalone)').matches){
 }
 </script>
 <script>
+// ===== FINAL LIVE FIX V5 - ALL KEYS =====
 async function uploadAll(){
   try{
-    const _db = window.db;
-    const _doc = window.doc;
-    const _setDoc = window.setDoc;
-    const _serverTimestamp = window.serverTimestamp;
-    if(!_db ||!_doc){ alert("Firebase la in-load lo, 2sec hnu ah try leh rawh"); return; }
-    const g=k=>localStorage.getItem(k);
-    let v;
-    v=g('kawn_chanchin'); if(v) await _setDoc(_doc(_db,"kohhran","chanchin"),{text:v, updatedAt:_serverTimestamp()},{merge:true});
-    v=g('kawn_inkh'); if(v) await _setDoc(_doc(_db,"kohhran","inkhawmpui"),{text:v, updatedAt:_serverTimestamp()},{merge:true});
-    v=g('kawn_hriat'); if(v) await _setDoc(_doc(_db,"kohhran","hriatList"),{data:v, updatedAt:_serverTimestamp()},{merge:true});
-    v=g('kawn_puipa8_full'); if(v) await _setDoc(_doc(_db,"kohhran","puipate"),{data:v, updatedAt:_serverTimestamp()},{merge:true});
-    v=g('kawn_videos'); if(v) await _setDoc(_doc(_db,"kohhran","videos"),{data:v, updatedAt:_serverTimestamp()},{merge:true});
-    v=g('kawn_drive_photos'); if(v) await _setDoc(_doc(_db,"kohhran","drivePhotos"),{data:v, updatedAt:_serverTimestamp()},{merge:true});
-    v=g('kawn_docs_link'); if(v) await _setDoc(_doc(_db,"kohhran","docs"),{data:v, updatedAt:_serverTimestamp()},{merge:true});
-    v=g('kawn_palai'); if(v) await _setDoc(_doc(_db,"kohhran","palaiData"),{data:v, updatedAt:_serverTimestamp()},{merge:true});
-    v=g('kawn_thlen_host'); if(v) await _setDoc(_doc(_db,"kohhran","thlenHosts"),{data:v, updatedAt:_serverTimestamp()},{merge:true});
+    const _db = window.db; const _doc = window.doc;
+    const _setDoc = window.setDoc; const _ts = window.serverTimestamp;
+    if(!_db ||!_doc){ alert("⏳ Firebase la in-load lo, 2sec hnu ah GREEN button hmet leh rawh!"); return; }
+    const up = async (docId, lsKey) => {
+      const v = localStorage.getItem(lsKey); if(!v) return;
+      await _setDoc(_doc(_db,"kohhran",docId), {data:v, text:v, updatedAt:_ts()}, {merge:true});
+    };
+    let v = localStorage.getItem('kawn_chanchin');
+    if(v) await _setDoc(_doc(_db,"kohhran","chanchin"),{text:v, updatedAt:_ts()},{merge:true});
+    v = localStorage.getItem('kawn_inkh');
+    if(v) await _setDoc(_doc(_db,"kohhran","inkhawmpui"),{text:v, updatedAt:_ts()},{merge:true});
+
+    await up("bials","kawn_bials_v2");
+    await up("kohhrans","kawn_kohhrans_v2");
+    await up("palais","kawn_palais_v2");
+    await up("thlenHosts","kawn_thlenHosts");
+    await up("thlenGuests","kawn_thlenGuests");
+    await up("puipate","kawn_puipa8_full");
+    await up("thuSun","thuSunSheets");
+    await up("deptLeaders","kawn_dept_leaders");
+    await up("videos","kawn_videos");
+    await up("drivePhotos","kawn_drive_photos");
+    await up("docs","kawn_docs_link");
+    await up("deptList","kawn_deptList");
+    await up("depts","kawn_depts");
+    await up("inbox","kawn_inbox");
+    alert("✅ LIVE SUCCESS! Phone dang ah en rawh!");
   }catch(e){ alert("Error: "+e.message); }
 }
-function hook(fn){ if(window[fn]){ let old=window[fn]; window[fn]=async function(){ let r=old.apply(this,arguments); await uploadAll(); return r; }; } }
-setTimeout(function(){ ["sEditHria","sEditChanchin","sEditInkh","sEditPuipa","saveAll","sEditPalai","sEditThlen","sEditVideo","sEditDocs","sEditDrive"].forEach(hook); },1500);
-function listen(col,k){
-  var check=setInterval(function(){
-    if(window.db && window.doc && window.onSnapshot){
-      clearInterval(check);
-      window.onSnapshot(window.doc(window.db,"kohhran",col),function(s){
-        if(s.exists()){
-          var d=s.data(); var val=d.text||d.data; if(!val) return;
-          var key=k||(col==="chanchin"?"kawn_chanchin":col==="inkhawmpui"?"kawn_inkh":null);
-          if(!key) return;
-          var cur=localStorage.getItem(key);
-          if(cur!==val){ localStorage.setItem(key,val); location.reload(); }
-        }
-      });
-    }
-  },500);
+function hookLive(fn){
+  if(window[fn]){
+    const old = window[fn];
+    window[fn] = async function(){ const r=old.apply(this,arguments); setTimeout(uploadAll,600); return r; };
+  }
 }
-listen("chanchin"); listen("inkhawmpui"); listen("hriatList","kawn_hriat"); listen("puipate","kawn_puipa8_full"); listen("videos","kawn_videos");
+setTimeout(()=>{ ["saveAll","sEdit","sEditI","sEditHria"].forEach(hookLive); },2000);
+
+function listenLive(docId, lsKey){
+  const t=setInterval(()=>{
+    if(window.db && window.doc && window.onSnapshot){
+      clearInterval(t);
+      try{
+        window.onSnapshot(window.doc(window.db,"kohhran",docId), s=>{
+          if(s.exists()){
+            const val = s.data().data || s.data().text; if(!val) return;
+            if(localStorage.getItem(lsKey)!== val){
+              localStorage.setItem(lsKey, val); location.reload();
+            }
+          }
+        });
+      }catch(e){}
+    }
+  },800);
+}
+listenLive("chanchin","kawn_chanchin");
+listenLive("inkhawmpui","kawn_inkh");
+listenLive("bials","kawn_bials_v2");
+listenLive("kohhrans","kawn_kohhrans_v2");
+listenLive("palais","kawn_palais_v2");
+listenLive("thlenHosts","kawn_thlenHosts");
+listenLive("thlenGuests","kawn_thlenGuests");
+listenLive("puipate","kawn_puipa8_full");
+listenLive("thuSun","thuSunSheets");
+listenLive("videos","kawn_videos");
+listenLive("drivePhotos","kawn_drive_photos");
+listenLive("docs","kawn_docs_link");
+listenLive("deptList","kawn_deptList");
+listenLive("depts","kawn_depts");
+</script>
+
+<script>
+// GREEN BUTTON - Admin tan a lo lang ang
+setTimeout(()=>{
+  document.querySelectorAll('.adminOnly').forEach(p=>{
+    if(!p.querySelector('.manualUploadBtn')){
+      const b=document.createElement('button');
+      b.className='manualUploadBtn';
+      b.innerHTML='🚀 LIVE UPLOAD - Hei hi hmet rawh (Phone dang a lang nan)';
+      b.style.cssText='background:#16a34a;color:white;padding:14px;width:95%;margin:10px auto;display:block;border:none;border-radius:12px;font-weight:900;font-size:14px';
+      b.onclick=uploadAll;
+      p.prepend(b);
+    }
+  });
+},2500);
 </script>
 </body>
 </html>
+
+ 
     
