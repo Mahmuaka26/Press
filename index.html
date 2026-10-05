@@ -292,4 +292,17 @@ document.getElementById('puipaPhotoInput').addEventListener('change',function(e)
 document.getElementById('box').innerText=chanchin;document.getElementById('ibox').innerText=inkh;checkAdmin();renderPuipa();renderThuSun();renderDrivePhotos();renderVideo();renderDocs();renderHriat();renderPalaiBials();renderThlenHosts();renderInbox();updateBar();goHome();
 </script>
 <script>(function(){var SECRET="Feb26";var cnt=0,last=0;var kawn=document.getElementById('kawnClick');if(kawn){kawn.addEventListener('click',function(){var now=Date.now();if(now-last>3000)cnt=0;last=now;cnt++;if(cnt>=5){cnt=0;checkAdmin();if(isAdmin){if(confirm('Logout duh em?')){sessionStorage.removeItem('kawn_isAdmin');isAdmin=false;updateBar();}return;}var p=prompt('Password:');if(p===SECRET){sessionStorage.setItem('kawn_isAdmin','true');checkAdmin();updateBar();alert('✅ Admin - tun ah delete theih tawh');}}});}})();</script>
-</body></html>
+<script>
+const GITHUB_CONFIG = { token: localStorage.getItem('kawn_github_token')||"", owner:"hmuaka26", repo:"hmuaka26.github.io", branch:"main", filePath:"index.html" };
+function askGithubToken(){let t=prompt("GitHub Token dah rawh:"); if(t&&t.trim().length>20){localStorage.setItem('kawn_github_token',t.trim()); GITHUB_CONFIG.token=t.trim(); alert("Token save fel!"); return true;} return false;}
+async function githubAutoCommit(){
+  if(!GITHUB_CONFIG.token){ if(!confirm("Token la awm lo! Dah duh em?")) return; if(!askGithubToken()) return; }
+  const getUrl=`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.filePath}?ref=${GITHUB_CONFIG.branch}`;
+  let sha=""; try{let r=await fetch(getUrl,{headers:{"Authorization":`token ${GITHUB_CONFIG.token}`}}); if(r.ok){let d=await r.json(); sha=d.sha;}}catch(e){}
+  const fullHtml="<!DOCTYPE html>\n"+document.documentElement.outerHTML;
+  const base64Content=btoa(unescape(encodeURIComponent(fullHtml)));
+  const putRes=await fetch(getUrl,{method:"PUT", headers:{"Authorization":`token ${GITHUB_CONFIG.token}`,"Content-Type":"application/json"}, body:JSON.stringify({message:"Auto Update "+new Date().toLocaleString(), content:base64Content, sha:sha||undefined, branch:GITHUB_CONFIG.branch})});
+  if(putRes.ok) alert("✅ GitHub LIVE SUCCESS - 2min hnu ah phone dang ah lang ang!");
+  else {let err=await putRes.text(); alert("Fail: "+putRes.status+" "+err.substring(0,200)); if(putRes.status==401) localStorage.removeItem('kawn_github_token');}
+}
+</script></body></html>
